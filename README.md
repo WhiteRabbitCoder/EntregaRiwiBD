@@ -124,7 +124,7 @@ HTTP input validation and wiring to service layer for suppliers, customers, tran
 Frontend for migration trigger and data exploration (suppliers, products, customers, categories, transaction lines, Mongo histories, supplier change logs) with a tech-oriented UI style.
 
 ## Docker adaptation
-`docker-compose.yml` now uses provider-focused names and variables:
+`docker-compose.yml` uses provider-focused names and variables:
 - DB: `megastore_datahub`
 - API env: `DATASET_CSV_PATH=/app/data-set.csv`
 - Containers: `megastore-datahub-*`
