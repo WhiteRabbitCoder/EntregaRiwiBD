@@ -1,0 +1,69 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: megastore-datahub-postgres
+    environment:
+      POSTGRES_USER: megastore
+      POSTGRES_PASSWORD: megastore
+      POSTGRES_DB: megastore_datahub
+    ports:
+      - "55432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U megastore -d megastore_datahub"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mongodb:
+    image: mongo:6
+    container_name: megastore-datahub-mongodb
+    ports:
+      - "28017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    container_name: megastore-datahub-redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    container_name: megastore-datahub-api
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://megastore:megastore@postgres:5432/megastore_datahub
+      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_DB: megastore_datahub
+      REDIS_URL: redis://redis:6379
+      DATASET_CSV_PATH: /app/data-set.csv
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  mongo_data:
+  redis_data:

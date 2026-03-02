@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Megastore datahub - Control Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <header class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">Megastore datahub</p>
+        <h1>Tech operations para ventas y proveedores</h1>
+        <p class="subtitle">
+          Ejecuta la migración y consulta clientes, proveedores y transacciones.
+        </p>
+        <div class="hero-actions">
+          <button id="btn-migrate" class="btn primary">Ejecutar migración</button>
+          <label class="toggle">
+            <input type="checkbox" id="clear-before" />
+            Limpiar antes
+          </label>
+        </div>
+        <div id="migration-status" class="status"></div>
+      </div>
+      <div class="hero-card">
+        <h2>Estado del sistema</h2>
+        <div class="stat-list">
+          <div class="stat">
+            <span class="stat-label">Dataset</span>
+            <span id="csv-path" class="stat-value">...</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Migración</span>
+            <span id="migration-summary" class="stat-value">Pendiente</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Tablas completas</h2>
+          <p>Explora los datos cargados en PostgreSQL y MongoDB.</p>
+        </div>
+        <div class="table-actions">
+          <button id="load-suppliers" class="btn tertiary">Ver proveedores</button>
+          <button id="load-products" class="btn tertiary">Ver productos</button>
+          <button id="load-customers" class="btn tertiary">Ver clientes</button>
+          <button id="load-categories" class="btn tertiary">Ver categorías</button>
+          <button id="load-transactions" class="btn tertiary">Ver transacciones</button>
+          <button id="load-histories" class="btn tertiary">Ver historiales (MongoDB)</button>
+          <button id="load-supplier-changes" class="btn tertiary">Ver logs de suppliers</button>
+        </div>
+        <div id="table-view" class="results"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Buscar proveedores</h2>
+          <p>Filtra por nombre o lista todos.</p>
+        </div>
+        <form id="supplier-form" class="form-grid">
+          <input type="text" id="supplier-name" placeholder="Nombre del proveedor" />
+          <button class="btn secondary" type="submit">Buscar</button>
+        </form>
+        <div id="supplier-results" class="results"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Proveedor por ID y actualización</h2>
+          <p>Consulta y actualiza la entidad CRUD principal.</p>
+        </div>
+        <form id="supplier-id-form" class="form-grid">
+          <input type="number" id="supplier-id" placeholder="ID proveedor" min="1" required />
+          <button class="btn secondary" type="submit">Consultar proveedor</button>
+        </form>
+        <form id="supplier-update-form" class="form-grid grid-2">
+          <input type="number" id="supplier-update-id" placeholder="ID proveedor" min="1" required />
+          <input type="text" id="supplier-update-name" placeholder="Nuevo nombre (opcional)" />
+          <input type="email" id="supplier-update-email" placeholder="Nuevo email (opcional)" />
+          <button class="btn secondary" type="submit">Actualizar proveedor</button>
+        </form>
+        <div id="supplier-id-results" class="results"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Buscar clientes</h2>
+          <p>Busca por nombre o email.</p>
+        </div>
+        <form id="customer-form" class="form-grid">
+          <input type="text" id="customer-query" placeholder="Nombre o email" />
+          <button class="btn secondary" type="submit">Buscar</button>
+        </form>
+        <div id="customer-results" class="results"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Historial de cliente</h2>
+          <p>Consulta compras agregadas desde MongoDB.</p>
+        </div>
+        <form id="history-form" class="form-grid">
+          <input type="email" id="history-email" placeholder="Email del cliente" required />
+          <button class="btn secondary" type="submit">Consultar</button>
+        </form>
+        <div id="history-results" class="results"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Buscar transacciones</h2>
+          <p>Filtra por cliente, proveedor o rango de fechas.</p>
+        </div>
+        <form id="transaction-form" class="form-grid grid-2">
+          <input type="email" id="transaction-customer" placeholder="Email cliente" />
+          <input type="email" id="transaction-supplier" placeholder="Email proveedor" />
+          <input type="date" id="transaction-start" />
+          <input type="date" id="transaction-end" />
+          <button class="btn secondary" type="submit">Buscar transacciones</button>
+        </form>
+        <div id="transaction-results" class="results"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Reportes</h2>
+          <p>Análisis de proveedores y productos estrella por categoría.</p>
+        </div>
+        <form id="report-sales-form" class="form-grid grid-2">
+          <input type="date" id="report-start" />
+          <input type="date" id="report-end" />
+          <button class="btn secondary" type="submit">Reporte de recaudación</button>
+        </form>
+        <form id="supplier-analysis-form" class="form-grid grid-2">
+          <input type="date" id="supplier-analysis-start" />
+          <input type="date" id="supplier-analysis-end" />
+          <button class="btn secondary" type="submit">Análisis de proveedores</button>
+        </form>
+        <form id="top-products-form" class="form-grid grid-2">
+          <input type="text" id="top-products-category" placeholder="Categoría (requerido)" required />
+          <input type="number" id="top-products-limit" placeholder="Límite (10)" min="1" max="50" />
+          <button class="btn secondary" type="submit">Productos estrella</button>
+        </form>
+        <div id="report-results" class="results"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Megastore datahub · Persistencia híbrida SQL + MongoDB</p>
+    </footer>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

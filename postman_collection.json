@@ -1,0 +1,141 @@
+{
+  "info": {
+    "name": "Megastore datahub API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Colección para probar los endpoints de Megastore datahub"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "supplierId",
+      "value": "1"
+    },
+    {
+      "key": "customerEmail",
+      "value": "andres.lopez@gmail.com"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "Simulacro info",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/simulacro"
+      }
+    },
+    {
+      "name": "Migrar dataset",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clearBefore\": true\n}"
+        },
+        "url": "{{baseUrl}}/api/simulacro/migrate"
+      }
+    },
+    {
+      "name": "Listar proveedores",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/suppliers"
+      }
+    },
+    {
+      "name": "Proveedor por ID",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/suppliers/{{supplierId}}"
+      }
+    },
+    {
+      "name": "Actualizar proveedor",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Proveedor Actualizado\",\n  \"email\": \"proveedor.actualizado@megastore.com\"\n}"
+        },
+        "url": "{{baseUrl}}/api/suppliers/{{supplierId}}"
+      }
+    },
+    {
+      "name": "Listar clientes",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/customers"
+      }
+    },
+    {
+      "name": "Historial cliente",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/customers/{{customerEmail}}/history"
+      }
+    },
+    {
+      "name": "Listar categorías",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/categories"
+      }
+    },
+    {
+      "name": "Listar transacciones",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/transactions?limit=50"
+      }
+    },
+    {
+      "name": "Listar historiales Mongo",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/histories?limit=50"
+      }
+    },
+    {
+      "name": "Reporte de recaudación",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/reports/sales"
+      }
+    },
+    {
+      "name": "Análisis de proveedores",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/reports/supplier-analysis"
+      }
+    },
+    {
+      "name": "Productos estrella por categoría",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/reports/top-products?category=Accessories&limit=10"
+      }
+    }
+  ]
+}
